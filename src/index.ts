@@ -11,6 +11,7 @@ client.on('auth_failure', () => {
 
 client.on('qr', (qr) => {
   qrcode.generate(qr, { small: true })
+  console.log(`QR Code: ${qr}`)
 })
 
 client.on('authenticated', async () => {
