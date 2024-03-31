@@ -1,35 +1,18 @@
-import qrcode from 'qrcode-terminal'
-import { Client, LocalAuth } from 'whatsapp-web.js'
+import mongoose from 'mongoose'
+import { Client, RemoteAuth } from 'whatsapp-web.js'
+import { MongoStore } from 'wwebjs-mongo'
 
-const client = new Client({
-  authStrategy: new LocalAuth(),
+import { env } from './env'
+import initialize from './initialize'
+
+mongoose.connect(env.MONGODB_URI).then(() => {
+  const store = new MongoStore({ mongoose })
+  const client = new Client({
+    authStrategy: new RemoteAuth({
+      store,
+      backupSyncIntervalMs: 300000,
+    }),
+  })
+
+  initialize(client)
 })
-
-client.on('auth_failure', () => {
-  console.log('Erro de autenticação')
-})
-
-client.on('qr', (qr) => {
-  qrcode.generate(qr, { small: true })
-  console.log(`QR Code: ${qr}`)
-})
-
-client.on('authenticated', async () => {
-  console.log('Autenticado com sucesso!')
-})
-
-client.on('ready', async () => {
-  console.log('Client is ready!')
-  await client.sendMessage(
-    client.info.wid._serialized,
-    'Bot iniciado com sucesso!',
-  )
-})
-
-client.on('message', async (msg) => {
-  if (msg.body === '!ping') {
-    msg.reply('pong')
-  }
-})
-
-client.initialize()
