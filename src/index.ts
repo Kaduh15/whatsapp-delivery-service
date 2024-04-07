@@ -16,7 +16,7 @@ async function connectToWhatsApp() {
 
   sock.ev.on('creds.update', saveCreds)
 
-  sock.ev.on('connection.update', (update) => {
+  sock.ev.on('connection.update', async (update) => {
     const { connection, lastDisconnect, qr } = update
     if (qr) {
       console.log('qr code:', qr)
@@ -38,6 +38,12 @@ async function connectToWhatsApp() {
       }
     } else if (connection === 'open') {
       console.log('opened connection')
+
+      if (!sock.user) return
+
+      await sock.sendMessage(sock.user?.id, {
+        text: 'Olá, estou online!',
+      })
     }
   })
   sock.ev.on('messages.upsert', async (m) => {
@@ -55,9 +61,16 @@ async function fluxo(
   },
   sock: ReturnType<typeof makeWASocket>,
 ) {
-  if (m.messages[0]?.key?.fromMe) return
-  const remoteJid = m.messages[0].key.remoteJid || ''
   const message = m.messages[0].message?.conversation || ''
+  if (m.messages[0]?.key?.fromMe) return
+  if (!message) {
+    await sock.sendMessage(m.messages[0].key.remoteJid || '', {
+      text: `Eu não entendo outra mensagem que não seja texto.`,
+    })
+
+    return
+  }
+  const remoteJid = m.messages[0].key.remoteJid || ''
 
   if (message === '1') {
     await sock.sendMessage(
