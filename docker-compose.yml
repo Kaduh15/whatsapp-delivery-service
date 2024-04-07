@@ -5,3 +5,8 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: app
+    volumes:
+      - .:/app
+
+volumes:
+  app:
