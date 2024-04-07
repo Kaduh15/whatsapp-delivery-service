@@ -89,8 +89,7 @@ async function fluxo(
     remoteJid,
     {
       text: `Olá, esse é um teste de mensagem automática.
-Você enviou: ${m.messages[0].message?.conversation}
-respondo com:
+Responda com o número da opção desejada:
     1 - Quero saber mais
     2 - Finalizar
     `,
