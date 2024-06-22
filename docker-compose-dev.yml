@@ -6,5 +6,5 @@ services:
       dockerfile: DockerfileDev
     container_name: app
     volumes:
-      - ./auth:/app/auth
+      - ./tokens:/app/tokens
       - ./src:/app/src

@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node --trace-warnings --env-file=.env .",
     "dev": "NODE_OPTIONS='--import tsx' node --watch --env-file=.env src/index.ts",
+    "compose:up:dev": "docker compose -f docker-compose-dev.yml up -d --build --remove-orphans",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,6 +16,8 @@
   "dependencies": {
     "@hapi/boom": "^10.0.1",
     "@whiskeysockets/baileys": "^6.6.0",
+    "pino": "^7.11.0",
+    "pino-pretty": "^11.2.1",
     "qrcode-terminal": "^0.12.0",
     "zod": "^3.22.4"
   },

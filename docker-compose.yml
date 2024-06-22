@@ -6,4 +6,4 @@ services:
       dockerfile: Dockerfile
     container_name: app
     volumes:
-      - ./auth:/app/auth
+      - ./tokens:/app/tokens
